@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3B3EC62F1FAF433500855B84 /* cityGroups.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3B3EC62B1FAF433400855B84 /* cityGroups.plist */; };
+		3B3EC6301FAF433500855B84 /* CityGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B3EC62D1FAF433400855B84 /* CityGroup.m */; };
+		3B3EC6311FAF433500855B84 /* CityGroupTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B3EC62E1FAF433400855B84 /* CityGroupTableViewController.m */; };
 		3B672F341FADA2A90081681F /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B672F331FADA2A90081681F /* AppDelegate.m */; };
 		3B672F371FADA2A90081681F /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B672F361FADA2A90081681F /* ViewController.m */; };
 		3B672F3A1FADA2A90081681F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3B672F381FADA2A90081681F /* Main.storyboard */; };
@@ -114,6 +117,7 @@
 		3B6730361FADA3A80081681F /* 8.png in Resources */ = {isa = PBXBuildFile; fileRef = 3B672FDC1FADA3A80081681F /* 8.png */; };
 		3B6730371FADA3A80081681F /* 9.png in Resources */ = {isa = PBXBuildFile; fileRef = 3B672FDD1FADA3A80081681F /* 9.png */; };
 		3B6730381FADA3A80081681F /* 99.png in Resources */ = {isa = PBXBuildFile; fileRef = 3B672FDE1FADA3A80081681F /* 99.png */; };
+		3B7BF38B1FB01A3100E052F9 /* rainData.json in Resources */ = {isa = PBXBuildFile; fileRef = 3B7BF38A1FB01A3100E052F9 /* rainData.json */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -134,6 +138,11 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		3B3EC62A1FAF433400855B84 /* CityGroupTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CityGroupTableViewController.h; sourceTree = "<group>"; };
+		3B3EC62B1FAF433400855B84 /* cityGroups.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = cityGroups.plist; sourceTree = "<group>"; };
+		3B3EC62C1FAF433400855B84 /* CityGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CityGroup.h; sourceTree = "<group>"; };
+		3B3EC62D1FAF433400855B84 /* CityGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CityGroup.m; sourceTree = "<group>"; };
+		3B3EC62E1FAF433400855B84 /* CityGroupTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CityGroupTableViewController.m; sourceTree = "<group>"; };
 		3B672F2F1FADA2A90081681F /* 小小的天气侧滑.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "小小的天气侧滑.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3B672F321FADA2A90081681F /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		3B672F331FADA2A90081681F /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -259,6 +268,7 @@
 		3B672FDC1FADA3A80081681F /* 8.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 8.png; sourceTree = "<group>"; };
 		3B672FDD1FADA3A80081681F /* 9.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 9.png; sourceTree = "<group>"; };
 		3B672FDE1FADA3A80081681F /* 99.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 99.png; sourceTree = "<group>"; };
+		3B7BF38A1FB01A3100E052F9 /* rainData.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = rainData.json; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -309,8 +319,8 @@
 		3B672F311FADA2A90081681F /* 小小的天气侧滑 */ = {
 			isa = PBXGroup;
 			children = (
-				3B672F321FADA2A90081681F /* AppDelegate.h */,
 				3B672F6D1FADA3320081681F /* ThirdFramework */,
+				3B672F321FADA2A90081681F /* AppDelegate.h */,
 				3B672F331FADA2A90081681F /* AppDelegate.m */,
 				3B672F351FADA2A90081681F /* ViewController.h */,
 				3B672F361FADA2A90081681F /* ViewController.m */,
@@ -319,8 +329,14 @@
 				3B672F691FADA2E00081681F /* CALeftWeatherViewVIew.h */,
 				3B672F641FADA2DF0081681F /* CALeftWeatherViewVIew.m */,
 				3B672F671FADA2DF0081681F /* WeatherModel.h */,
-				3B672F821FADA3A80081681F /* images */,
 				3B672F661FADA2DF0081681F /* WeatherModel.m */,
+				3B3EC62C1FAF433400855B84 /* CityGroup.h */,
+				3B3EC62D1FAF433400855B84 /* CityGroup.m */,
+				3B3EC62B1FAF433400855B84 /* cityGroups.plist */,
+				3B7BF38A1FB01A3100E052F9 /* rainData.json */,
+				3B3EC62A1FAF433400855B84 /* CityGroupTableViewController.h */,
+				3B3EC62E1FAF433400855B84 /* CityGroupTableViewController.m */,
+				3B672F821FADA3A80081681F /* images */,
 				3B672F381FADA2A90081681F /* Main.storyboard */,
 				3B672F3B1FADA2A90081681F /* Assets.xcassets */,
 				3B672F3D1FADA2A90081681F /* LaunchScreen.storyboard */,
@@ -632,6 +648,7 @@
 				3B67302B1FADA3A80081681F /* 32.png in Resources */,
 				3B672FF11FADA3A80081681F /* ele_sunnyNightFirefly.png in Resources */,
 				3B672FFC1FADA3A80081681F /* bg_fog_day.jpg in Resources */,
+				3B3EC62F1FAF433500855B84 /* cityGroups.plist in Resources */,
 				3B6730091FADA3A80081681F /* ele_rainLine2.png in Resources */,
 				3B672FE31FADA3A80081681F /* ele_sunnyBird5.png in Resources */,
 				3B6730281FADA3A80081681F /* 3.png in Resources */,
@@ -687,6 +704,7 @@
 				3B67301F1FADA3A80081681F /* 21.png in Resources */,
 				3B672FEB1FADA3A80081681F /* ele_sunnyBirdInvertedImage5.png in Resources */,
 				3B672FEA1FADA3A80081681F /* ele_sunnyBirdInvertedImage4.png in Resources */,
+				3B7BF38B1FB01A3100E052F9 /* rainData.json in Resources */,
 				3B6730101FADA3A80081681F /* snow.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -714,6 +732,8 @@
 			files = (
 				3B672F6C1FADA2E00081681F /* WeatherModel.m in Sources */,
 				3B672F7E1FADA3320081681F /* AFSecurityPolicy.m in Sources */,
+				3B3EC6311FAF433500855B84 /* CityGroupTableViewController.m in Sources */,
+				3B3EC6301FAF433500855B84 /* CityGroup.m in Sources */,
 				3B672F371FADA2A90081681F /* ViewController.m in Sources */,
 				3B672F421FADA2A90081681F /* main.m in Sources */,
 				3B672F801FADA3320081681F /* AFURLResponseSerialization.m in Sources */,

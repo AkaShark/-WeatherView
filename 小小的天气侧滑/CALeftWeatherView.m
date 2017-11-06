@@ -17,10 +17,13 @@
 #import <AddressBook/AddressBook.h>
 #import "AFNetworking.h"
 #import "WeatherModel.h"
-@interface CALeftWeatherView() <CLLocationManagerDelegate>
+#import "CityGroupTableViewController.h"
+@interface CALeftWeatherView() <CLLocationManagerDelegate,pushToTheCityTableViewDelegate>
 @property(nonatomic, strong)  CLLocation *currLocation;
 @property(strong,nonatomic)CLLocationManager *locationManager;
 @property (nonatomic, strong) AFHTTPSessionManager *manager;
+@property (nonatomic,strong) WeatherModel *weatherModel;
+@property(nonatomic,strong) NSString *altitudeStr;
 //多云动画
 @property (nonatomic, strong) NSMutableArray *imageArr;//鸟图片数组
 @property (nonatomic, strong) UIImageView *birdImage;//鸟本体
@@ -44,6 +47,7 @@
     if (self = [super init])
     {
         [self createLocationManager];
+       
     }
     return self;
 }
@@ -56,7 +60,7 @@
     self.locationManager.delegate=self;
     //  定位频率,每隔多少米定位一次
     // 距离过滤器，移动了几米之后，才会触发定位的代理函数
-    self.locationManager.distanceFilter = 10;
+    self.locationManager.distanceFilter = 100;
     
     // 定位的精度，越精确，耗电量越高
     self.locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation;//导航
@@ -72,19 +76,24 @@
     if ([CLLocationManager locationServicesEnabled]&&[CLLocationManager headingAvailable]){
         
         [self.locationManager startUpdatingLocation];//开启定位服务
-        [self.locationManager startUpdatingHeading];//开始获得航向数据
+//        [self.locationManager startUpdatingHeading];//开始获得航向数据
         
         //        这个方法已被执行，就会回调下面的方法
         //        -(void)locationManager:(CLLocationManager *)manager didUpdateHeading:(CLHeading *)newHeading
     }
     else{
 //        NSLog(@"不能获得航向数据");
+          [self sendRequestToServer:@"张家口"];
     }
 
 }
 //获取位置 代理方法
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations{
     self.currLocation = [locations lastObject];
+    
+    
+    self.altitudeStr  = [NSString stringWithFormat:@"%3.2f",_currLocation.altitude];
+                       
     //基于CLGeocoder - 反地理编码
     CLGeocoder *geocoder = [[CLGeocoder alloc] init];
     
@@ -128,16 +137,25 @@
         NSArray *resultArray = responseObject[@"results"];
         for (NSDictionary *dic in resultArray) {
             
-            WeatherModel *model = [[WeatherModel alloc]init];
-            model.cityName = dic[@"location"][@"name"];
-            model.todayDic = (NSDictionary *)[dic[@"daily"] objectAtIndex:0];
-            model.tomorrowDic = (NSDictionary *)[dic[@"daily"] objectAtIndex:1];
-            model.afterTomorrowDic = (NSDictionary *)[dic[@"daily"] objectAtIndex:2];
+              NSInteger type = [[dic[@"daily"] objectAtIndex:0][@"code_day"] integerValue];
             
-            self.weatherView.model = model;
+            _weatherModel = [[WeatherModel alloc]init];
+            _weatherModel.cityName = dic[@"location"][@"name"];
+            _weatherModel.todayDic = (NSDictionary *)[dic[@"daily"] objectAtIndex:0];
+            _weatherModel.tomorrowDic = (NSDictionary *)[dic[@"daily"] objectAtIndex:1];
+            _weatherModel.afterTomorrowDic = (NSDictionary *)[dic[@"daily"] objectAtIndex:2];
+            _weatherModel.altitudeStr = self.altitudeStr;
+              _weatherModel.weather = [self justTheWeather:type];
+            self.weatherView.model = _weatherModel;
+            self.weatherView.TVDelegate = self;
             [self addSubview:self.weatherView];
+            
             //执行动画
              [self addAnimationWithType:[dic[@"daily"] objectAtIndex:0][@"code_day"]];
+            
+          
+          
+            
         }
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         
@@ -161,53 +179,60 @@
     [self removeAnimationView];
     
     NSInteger type = [weatherType integerValue];
+    [self justTheWeather:type];
+    
+}
+- (NSString *)justTheWeather : (NSInteger )type
+{
     //根返回的添加code判断天气然后对应的添加动画
     if (type >= 0 && type < 4) { //晴天
-//        [self changeImageAnimated:[UIImage imageNamed:@"bg_sunny_day.jpg"]];
+        //        [self changeImageAnimated:[UIImage imageNamed:@"bg_sunny_day.jpg"]];
         [self sun];//动画
+        return @"晴天";
     }
     else if (type >= 4 && type < 10) { //多云
-//        [self changeImageAnimated:[UIImage imageNamed:@"bg_normal.jpg"]];
-//        [self wind];//动画
+        //        [self changeImageAnimated:[UIImage imageNamed:@"bg_normal.jpg"]];
+        //        [self wind];//动画
+        return @"多云";
     }
     else if (type >= 10 && type < 20) { //雨
         //        [self changeImageAnimated:[UIImage imageNamed:@"bg_rain_day.jpg"]];
         //        [self rain];
-//        [self changeImageAnimated:[UIImage imageNamed:@"bg_snow_night.jpg"]];
+        //        [self changeImageAnimated:[UIImage imageNamed:@"bg_snow_night.jpg"]];
         [self snow];
+        return @"雨";
     }
     else if (type >= 20 && type < 26) { //雪
-//        [self changeImageAnimated:[UIImage imageNamed:@"bg_snow_night.jpg"]];
+        //        [self changeImageAnimated:[UIImage imageNamed:@"bg_snow_night.jpg"]];
         [self snow];
+        return @"雪";
     }
     else if (type >= 26 && type < 30) { //沙尘暴
-//        [self changeImageAnimated:[UIImage imageNamed:@"bg_sunny_day.jpg"]];
-        
+        //        [self changeImageAnimated:[UIImage imageNamed:@"bg_sunny_day.jpg"]];
+        return @"沙尘暴";
     }
     else if (type >= 30 && type < 32) { //雾霾
-//        [self changeImageAnimated:[UIImage imageNamed:@"bg_haze.jpg"]];
-        
+        //        [self changeImageAnimated:[UIImage imageNamed:@"bg_haze.jpg"]];
+        return @"雾霾";
     }
     else if (type >= 32 && type < 37) { //风
-//        [self changeImageAnimated:[UIImage imageNamed:@"bg_sunny_day.jpg"]];
-        
+        //        [self changeImageAnimated:[UIImage imageNamed:@"bg_sunny_day.jpg"]];
+        return @"风";
     }
     else if (type == 37) { //冷
-//        [self changeImageAnimated:[UIImage imageNamed:@"bg_fog_day.jpg"]];
-        
+        //        [self changeImageAnimated:[UIImage imageNamed:@"bg_fog_day.jpg"]];
+        return @"冷";
     }
     else if (type == 38) { //热
-//        [self changeImageAnimated:[UIImage imageNamed:@"bg_sunny_day.jpg"]];
-        
+        //        [self changeImageAnimated:[UIImage imageNamed:@"bg_sunny_day.jpg"]];
+        return @"热";
     }
     else if (type == 99) { //未知
-        
-        
+        return @"未知";
     }
-    
-//    [self.view bringSubviewToFront:self.weatherV];
-//    [self.view bringSubviewToFront:self.changeCityBtn];//懒加载，将切换城市按钮拿到最上层
-    
+    return @"";
+    //    [self.view bringSubviewToFront:self.weatherV];
+    //    [self.view bringSubviewToFront:self.changeCityBtn];//懒加载，将切换城市按钮拿到最上层
 }
 - (void)removeAnimationView {
     //先将所有的动画移除
@@ -220,7 +245,8 @@
     [self.sunCloudImage removeFromSuperview];
     [self.rainCloudImage removeFromSuperview];
     
-    for (NSInteger i = 0; i < _jsonArray.count; i++) {
+    for (NSInteger i = 0; i < _jsonArray.count; i++)
+    {
         UIImageView *rainLineView = (UIImageView *)[self viewWithTag:100+i];
         [rainLineView removeFromSuperview];//移除下雨
         
@@ -250,14 +276,14 @@
     [_sunshineImage.layer addAnimation:[self sunshineAnimationWithDuration:40] forKey:nil];
     
     
-    //晴天云
-    _sunCloudImage = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"ele_sunnyCloud2"]];
-    CGRect frame = _sunCloudImage.frame;
-    frame.size = CGSizeMake(kScreenHeight *0.7, kScreenWidth*0.5);
-    _sunCloudImage.frame = frame;
-    _sunCloudImage.center = CGPointMake(kScreenWidth * 0.25, kScreenHeight*0.5);
-    [_sunCloudImage.layer addAnimation:[self birdFlyAnimationWithToValue:@(kScreenWidth+30) duration:50] forKey:nil];
-    [self addSubview:_sunCloudImage];
+//    //晴天云
+//    _sunCloudImage = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"ele_sunnyCloud2"]];
+//    CGRect frame = _sunCloudImage.frame;
+//    frame.size = CGSizeMake(kScreenHeight *0.7, kScreenWidth*0.5);
+//    _sunCloudImage.frame = frame;
+//    _sunCloudImage.center = CGPointMake(kScreenWidth * 0.25, kScreenHeight*0.5);
+//    [_sunCloudImage.layer addAnimation:[self birdFlyAnimationWithToValue:@(kScreenWidth+30) duration:50] forKey:nil];
+//    [self addSubview:_sunCloudImage];
     
 }
 //下雪
@@ -321,5 +347,18 @@
     
     return showViewAnn;
 }
+
+/**
+ 代理方法
+ */
+- (void)pushToTheCityTableViewDelegate
+{
+    [self.delegate pushTOTheCityTableViewDontKnow];
+    
+  
+}
+
+
+
 
 @end

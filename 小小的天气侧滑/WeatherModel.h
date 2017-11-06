@@ -11,6 +11,8 @@
 @interface WeatherModel : NSObject
 
 @property(nonatomic,strong)NSString *cityName;
+@property(nonatomic,strong)NSString *altitudeStr;
+@property(nonatomic,strong)NSString *weather;
 @property(nonatomic,strong)NSDictionary *todayDic;
 @property(nonatomic,strong)NSDictionary *tomorrowDic;
 @property(nonatomic,strong)NSDictionary *afterTomorrowDic;

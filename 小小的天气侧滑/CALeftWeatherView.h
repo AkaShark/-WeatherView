@@ -8,7 +8,16 @@
 
 #import <UIKit/UIKit.h>
 #import "CALeftWeatherViewVIew.h"
+
+@protocol pushTOTheCityTableViewDontKnow <NSObject>
+
+- (void) pushTOTheCityTableViewDontKnow;
+
+@end
+
 @interface CALeftWeatherView : UIView
 @property (nonatomic,strong) CALeftWeatherViewVIew *weatherView;
-- (void)createLocationManager;
+@property (nonatomic,strong)id<pushTOTheCityTableViewDontKnow>delegate;
+
+- (void)sendRequestToServer:(NSString *)cityName;
 @end

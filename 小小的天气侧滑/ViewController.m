@@ -8,20 +8,54 @@
 
 #import "ViewController.h"
 #import "CALeftWeatherView.h"
-@interface ViewController ()
-
+#import "CALeftWeatherViewVIew.h"
+#import "CityGroupTableViewController.h"
+#import "CALeftWeatherViewVIew.h"
+@interface ViewController ()<pushTOTheCityTableViewDontKnow>
+@property (nonatomic,strong) CALeftWeatherView *weatherView;
 @end
 
 @implementation ViewController
 
-- (void)viewDidLoad {
+- (void)viewWillAppear:(BOOL)animated
+{
+    //设置导航栏背景图片为一个空的image，这样就透明了
+    [self.navigationController.navigationBar setBackgroundImage:[[UIImage alloc] init] forBarMetrics:UIBarMetricsDefault];
+    //去掉透明后导航栏下边的黑边
+    [self.navigationController.navigationBar setShadowImage:[[UIImage alloc] init]];
+}
+- (void)viewDidLoad
+{
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor blackColor];
-    CALeftWeatherView *weather = [[CALeftWeatherView alloc] init];
-    weather.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
-    [self.view addSubview:weather];
+
+    _weatherView = [[CALeftWeatherView alloc] init];
+    _weatherView.delegate = self;
+    _weatherView.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
+    [self.view addSubview:_weatherView];
     
     // Do any additional setup after loading the view, typically from a nib.
+}
+- (void)pushTOTheCityTableViewDontKnow
+{
+    CityGroupTableViewController *cityCtrl = [[CityGroupTableViewController alloc]init];
+    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:cityCtrl];
+    [nav.navigationBar setBackgroundImage:[UIImage imageNamed:@"navBg3"]
+                           forBarPosition:UIBarPositionAny
+                               barMetrics:UIBarMetricsDefault];
+    nav.navigationBar.titleTextAttributes = @{NSForegroundColorAttributeName: [UIColor whiteColor]};
+    nav.navigationBar.tintColor = [UIColor whiteColor];
+    [self presentViewController:nav animated:YES completion:nil];
+    
+
+    [cityCtrl setBlock:^void (NSString *cityName){
+        
+        [_weatherView.weatherView.locationLable setTitle:cityName forState:UIControlStateNormal];
+        
+        [_weatherView sendRequestToServer:cityName];
+        [_weatherView.weatherView.topLable removeFromSuperview];
+    }];
+    
 }
 
 
